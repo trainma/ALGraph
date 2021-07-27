@@ -2,7 +2,7 @@
 using namespace std;
 #define maxsize 100
 #define INF 99999
-
+#include "queue"
 typedef struct ArcNode{
     int adjvex;
     struct ArcNode* nextarc;
@@ -80,10 +80,59 @@ void Print_ALGraph(ALGraph G)
     }
 
 }
+bool visited[maxsize];
+void DFS(ALGraph G,int v)
+{   ArcNode *p=new ArcNode ;
+
+    cout<<v<<" ";
+    visited[v]= true;
+
+    p=G.vertices[v].firstarc;
+    while (p)
+    {
+        int w=p->adjvex;
+        if(!visited[w])
+            DFS(G,w);
+        p=p->nextarc;
+    }
+
+}
+void BFS(ALGraph G,int v)
+{
+    int i=0;
+    for(i=0;i<G.vexnum;i++)
+        visited[i]= false;
+    cout<<v<<" ";
+    queue<int>Q;
+    Q.push(v);
+    ArcNode *p=new ArcNode ;
+    while (!Q.empty())
+    {
+        int t=Q.front();
+        Q.pop();
+        for(p=G.vertices[t].firstarc;p!= nullptr;p=p->nextarc)
+        {
+            if(!visited[p->adjvex])
+            {
+                cout<<p->adjvex<<" ";
+                visited[p->adjvex]= true;
+                Q.push(p->adjvex);
+            }
+        }
+    }
+
+}
 int main() {
     std::cout << "Hello, World!" << std::endl;
     ALGraph G;
     CreateUDG(G);
     Print_ALGraph(G);
+
+    BFS(G,0);
+    int i=0;
+    for(i=0;i<G.vexnum;i++)
+        visited[i]= false;
+    cout<<"\n"<<endl;cout<<"\n"<<endl;
+    DFS(G,1);
     return 0;
 }
